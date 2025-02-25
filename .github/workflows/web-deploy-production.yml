@@ -25,7 +25,6 @@ jobs:
 
       - name: Create checksum
         run: sha256sum "$ARCHIVE_NAME".tar.gz > ${{ env.ARCHIVE_NAME }}-sha256-checksum.txt
-        working-directory: apps/web
 
 
       - name: Upload archive as release asset
@@ -42,7 +41,6 @@ jobs:
             -H "Content-Type: application/octet-stream" \
             --data-binary @"./${{ env.ARCHIVE_NAME }}.tar.gz" \
             "${{ github.event.release.upload_url }}?name=${{ env.ARCHIVE_NAME }}.tar.gz"
-        working-directory: apps/web
 
       - name: Upload checksum as release asset (checksum)
         run: |
@@ -58,4 +56,3 @@ jobs:
             -H "Content-Type: application/octet-stream" \
             --data-binary @"./${{ env.ARCHIVE_NAME }}-sha256-checksum.txt" \
             "${{ github.event.release.upload_url }}?name=${{ env.ARCHIVE_NAME }}-sha256-checksum.txt"
-        working-directory: apps/web
