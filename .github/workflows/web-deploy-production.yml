@@ -14,7 +14,7 @@ jobs:
     name: Deploy release
 
     env:
-      ARCHIVE_NAME: archive.zip
+      ARCHIVE_NAME: archive
 
     steps:
       - uses: actions/checkout@v4
