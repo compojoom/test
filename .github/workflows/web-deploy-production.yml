@@ -1,0 +1,61 @@
+name: Web Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    permissions:
+      id-token: write
+
+    runs-on: ubuntu-latest
+
+    name: Deploy release
+
+    env:
+      ARCHIVE_NAME: archive.zip
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create archive
+        run: tar -czf "$ARCHIVE_NAME".tar.gz out
+        working-directory: apps/web
+
+      - name: Create checksum
+        run: sha256sum "$ARCHIVE_NAME".tar.gz > ${{ env.ARCHIVE_NAME }}-sha256-checksum.txt
+        working-directory: apps/web
+
+
+      - name: Upload archive as release asset
+        run: |
+          echo "Uploading asset to release..."
+          url="${{ github.event.release.upload_url }}"
+          
+          # Strip out the {?name,label} portion to get a proper URL
+          url="${url/\{?name,label\}/}"
+          
+          echo "Uploading to: $url"
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @"./${{ env.ARCHIVE_NAME }}.tar.gz" \
+            "${{ github.event.release.upload_url }}?name=${{ env.ARCHIVE_NAME }}.tar.gz"
+        working-directory: apps/web
+
+      - name: Upload checksum as release asset (checksum)
+        run: |
+          echo "Uploading asset to release..."
+          url="${{ github.event.release.upload_url }}"
+    
+          # Strip out the {?name,label} portion to get a proper URL
+          url="${url/\{?name,label\}/}"
+      
+          echo "Uploading to: $url"
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @"./${{ env.ARCHIVE_NAME }}-sha256-checksum.txt" \
+            "${{ github.event.release.upload_url }}?name=${{ env.ARCHIVE_NAME }}-sha256-checksum.txt"
+        working-directory: apps/web
