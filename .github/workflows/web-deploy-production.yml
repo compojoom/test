@@ -39,7 +39,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/octet-stream" \
             --data-binary @"./${{ env.ARCHIVE_NAME }}.tar.gz" \
-            "${{ github.event.release.upload_url }}?name=${{ env.ARCHIVE_NAME }}.tar.gz"
+            "$url?name=${{ env.ARCHIVE_NAME }}.tar.gz"
 
       - name: Upload checksum as release asset (checksum)
         run: |
@@ -54,4 +54,4 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/octet-stream" \
             --data-binary @"./${{ env.ARCHIVE_NAME }}-sha256-checksum.txt" \
-            "${{ github.event.release.upload_url }}?name=${{ env.ARCHIVE_NAME }}-sha256-checksum.txt"
+            "$url?name=${{ env.ARCHIVE_NAME }}-sha256-checksum.txt"
