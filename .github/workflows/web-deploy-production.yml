@@ -66,4 +66,4 @@ jobs:
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ env.SBOM_FILE_NAME }}.json
+          asset_path: ${{ env.SBOM_FILE_NAME }}.tar.gz
