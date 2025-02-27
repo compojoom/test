@@ -37,8 +37,8 @@ jobs:
 
       - name: Generate SBOM for build
         run: | 
-          yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx --output-file ${{ env.SBOM_FILE }}.json
-          tar -czf ${{ env.SBOM_FILE }}.tar.gz ${{ env.SBOM_FILE }}.json
+          yarn dlx -q @cyclonedx/yarn-plugin-cyclonedx --output-file ${{ env.SBOM_FILE_NAME }}.json
+          tar -czf ${{ env.SBOM_FILE_NAME }}.tar.gz ${{ env.SBOM_FILE_NAME }}.json
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/attest-sbom@v2
         with:
           subject-path: ${{ env.ARCHIVE_NAME }}.tar.gz
-          sbom-path: './sbom.json'
+          sbom-path: './${{ env.SBOM_FILE_NAME }}.json'
 
       - name: Upload archive as release asset
         uses: shogo82148/actions-upload-release-asset@v1
@@ -66,4 +66,4 @@ jobs:
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ env.SBOM_FILE }}.json
+          asset_path: ${{ env.SBOM_FILE_NAME }}.json
